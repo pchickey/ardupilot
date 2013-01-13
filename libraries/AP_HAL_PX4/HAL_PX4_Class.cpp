@@ -39,7 +39,7 @@ static PX4EEPROMStorage storageDriver;
 static PX4RCInput rcinDriver;
 static PX4RCOutput rcoutDriver;
 
-#define UARTA_DEVICE "/dev/ttyS2"
+#define UARTA_DEVICE "/dev/ttyS0"
 #define UARTB_DEVICE "/dev/ttyS3"
 
 // only two real UART drivers for now
