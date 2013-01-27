@@ -20,6 +20,8 @@ void HBridge_APM2::init() {
     TCCR1B = (1<<WGM13)|(1<<WGM12)|(1<<CS11);
     OCR1A = 0xFFFF; // Init OCR registers to nil output signal
     OCR1B = 0xFFFF;
+
+    set_freq(1000); // basic default?
 }
 
 void HBridge_APM2::write(float left, float right) {
