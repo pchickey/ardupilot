@@ -56,7 +56,7 @@ void setup (void) {
     b_led->write(0);
     c_led->write(0);
 
-    hbridge = new HBridge_APM2(a_led, b_led, 0.01);
+    hbridge = new HBridge_APM(new HBridge_APMHW_APM2, a_led, b_led, 0.01);
     hbridge->set_freq(2000);
     hbridge->write(0.0f, 0.0f);
     hbridge->output_enabled(true);

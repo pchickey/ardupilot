@@ -5,6 +5,6 @@
 /* HBridge library umbrella header */
 
 #include "HBridge_Class.h"
-#include "HBridge_APM2.h"
+#include "HBridge_APM.h"
 
 #endif // __HBRIDGE_H__

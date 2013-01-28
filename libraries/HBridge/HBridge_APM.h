@@ -1,20 +1,31 @@
 
-#ifndef __HBRIDGE_APM2_H__
-#define __HBRIDGE_APM2_H__
+#ifndef __HBRIDGE_APM_H__
+#define __HBRIDGE_APM_H__
 
 #include <AP_HAL.h>
 
 #include "HBridge_Class.h"
 
-/* dual h-bridge output. overrides APM2's rcoutput on CH_1 and CH_2, uses those to output
+/* hardware delegate for HBridge_APM */
+class HBridge_APMHW {
+public:
+    virtual void init() = 0;
+    virtual void output_enabled(bool on) = 0;
+    virtual void set_period(uint16_t per) = 0;
+    virtual void write_pwm(uint16_t left, uint16_t right) = 0;
+};
+
+/* dual h-bridge output. overrides APM's rcoutput on CH_1 and CH_2, uses those to output
  * a high-frequency pwm for h-bridge control instead. */
 
-class HBridge_APM2 : public HBridge {
+class HBridge_APM : public HBridge {
 public:
     /* constructor takes the pins for the direction select lines. */
-    HBridge_APM2(AP_HAL::DigitalSource *left_dirselect,
+    HBridge_APM( HBridge_APMHW *hw_delegate,
+                 AP_HAL::DigitalSource *left_dirselect,
                  AP_HAL::DigitalSource *right_dirselect,
                  float deadband) :
+        _hw_delegate(hw_delegate),
         _left_dirselect(left_dirselect),
         _right_dirselect(right_dirselect),
         _deadband(deadband)
@@ -43,14 +54,29 @@ private:
     /* throttle between 0.0f and 1.0f. */
     uint16_t _pwm_output_of_throttle(float throttle);
 
-    void _write_pwm(uint16_t left, uint16_t right);
-
+    HBridge_APMHW *_hw_delegate;
     AP_HAL::DigitalSource* _left_dirselect;
     AP_HAL::DigitalSource* _right_dirselect;
     uint16_t _freq;
     float _deadband;
-    
 };
 
-#endif // __HBRIDGE_APM2_H__
+
+class HBridge_APMHW_APM1 : public HBridge_APMHW {
+public:
+    void init();
+    void output_enabled(bool on);
+    void set_period(uint16_t per);
+    void write_pwm(uint16_t left, uint16_t right);
+};
+
+class HBridge_APMHW_APM2 : public HBridge_APMHW {
+public:
+    void init();
+    void output_enabled(bool on);
+    void set_period(uint16_t per);
+    void write_pwm(uint16_t left, uint16_t right);
+};
+
+#endif // __HBRIDGE_APM_H__
 
